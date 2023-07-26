@@ -1,8 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for
+import time
+
+from flask import Flask, render_template, request, redirect, url_for, g
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import ValidationError
 import requests
+from sqlalchemy import event
+
 from models import db, User, Idea
 from schemas import UserSchema
 
@@ -11,6 +15,28 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 migrate = Migrate(app, db)
+
+# что хотим сделать до выполнения запроса
+@app.before_request
+def before_request():
+    g.start_time = time.time()
+
+# что хотим сдедать после выполнения запроса
+@app.after_request
+def after_request(response):
+    total_time = time.time() - g.start_time
+    print(f"Время выполнения запроса {total_time:.6f} секунд")
+    return response
+
+def log_db_queries(app):
+    @event.listens_for(db.engine, "before_cursor_execute") # функция которая слушвет запросы к базе данных
+    def before_cursor_execute(conn, cursor, statement, parameters, context, executemany):
+        # Выводим запросы к базе данных в консоль
+        print("Executing query: %s", statement)
+
+
+with app.app_context(): # доступ контекст к приложению (контекстный менеджер)
+    log_db_queries(app)
 
 
 # Страница для отображения всех пользователей:
