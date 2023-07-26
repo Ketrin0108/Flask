@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import ValidationError
-
+import requests
 from models import db, User, Idea
 from schemas import UserSchema
 
@@ -14,7 +14,6 @@ migrate = Migrate(app, db)
 
 
 # Страница для отображения всех пользователей:
-
 @app.route('/users')
 def users():
     users = User.query.all()
@@ -26,7 +25,7 @@ def users():
 def home():
     return {"status" : "ok"}
 
-
+# просмотр идеи для конкретного пользователя:
 @app.route("/ideas/users/<int:user_id>")
 def show_ideas(user_id):
     return render_template(
@@ -36,7 +35,7 @@ def show_ideas(user_id):
     )
 
 # Функция для генерации идеи и сохранения в базе данных:
-@app.route('/ideas/generate/<int:user_id>', methods=["POST"])
+@app.route('/ideas/generate/<int:user_id>', methods=['POST'])
 def generate_idea(user_id):
     response = requests.get('https://www.boredapi.com/api/activity').json()
     idea = response['activity']
@@ -46,26 +45,7 @@ def generate_idea(user_id):
     return redirect(url_for('users'))
 
 
-#Переход на страницу с идеями пользователя
-@app.route('/user/<int:user_id>/ideas')
-def user_ideas(user_id):
-    user = User.query.get(user_id)
-    return render_template('user_ideas.html', user=user)
-
-# @app.route("/create_idea", methods=["GET", "POST"])
-# def create_idea():
-#     if request.method == "POST":
-#         activity = request.form["activity"]
-#         type = request.form["type"]
-#
-#         new_idea = Idea(activity=activity, type=type)
-#         db.session.add(new_idea)
-#         db.session.commit()
-#         return redirect(url_for("show_ideas"))
-#     else:
-#         return render_template("home.html")
-
-
+# создание пользователя
 @app.route("/create_user", methods=["GET", "POST"])
 def create_user():
     if request.method == "POST":
@@ -84,7 +64,7 @@ def create_user():
         )
         db.session.add(new_user)
         db.session.commit()
-        return redirect(url_for("create_user"))
+        return redirect(url_for("users"))
     else:
         return render_template("create_user.html")
 

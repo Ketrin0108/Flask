@@ -11,17 +11,14 @@
             <thead>
                 <tr>
                     <th>activity</th>
-                    <th>type</th>
-
                 </tr>
             </thead>
             <tbody>
                 {% for idea in ideas %}
                 <tr>
-                    <td>{{ idea.activity }}</td>
-                    <td>{{ idea.type }}</td>
+                    <td>{{ idea.idea }}</td>
                     <td>
-                        <a href="{{ url_for('show_ideas', user_id=user.id) }}" class="btn btn-primary">Посмотреть пользователя</a>
+                        <a href="{{ url_for('show_ideas', user_id=user.id) }}"</a>
                     </td>
                 </tr>
                 {% endfor %}

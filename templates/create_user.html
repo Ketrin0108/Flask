@@ -17,14 +17,7 @@
                 <label for="last_name">Фамилия</label>
                 <input type="text" class="form-control" id="last_name" name="last_name" required>
             </div>
-            <div class="form-group">
-                <label for="idea_id">Идея</label>
-                <select class="form-control" id="idea_id" name="idea_id">
-                    {% for idea in ideas %}
-                    <option value="{{ idea.id }}">{{ idea.idea }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+
             <button type="submit" class="btn btn-primary">Создать</button>
         </form>
     </div>
