@@ -1,4 +1,0 @@
-flask db init # выполнить 1 раз чтобы создалились файлы миграции при помощи Olembic
-flask db migrate -m "Create idea model" потом сразу накатить миграции
-flask db upgrade потом нужно выполнить эту команду
-git rm -rf --cached .idea удалить папку иои файл с git, если нечаянно добавил , потом git comit -m "" И git pusg
