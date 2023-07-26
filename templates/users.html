@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Список пользователей</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Список пользователей</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Nime</th>
+                    <th>Usertname</th>
+                    <th>User's Ideas</th>
+                    <th>"Idea generator"</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.first_name }}</td>
+                    <td>{{ user.last_name }}</td>
+                    <td>
+                         <a href="{{ url_for('show_ideas', user_id=user.id) }}" class="btn btn-primary">Посмотреть идеи пользователя</a>
+                    </td>
+                    <td>
+                         <form action="{{ url_for('generate_idea', user_id=user.id) }}" method="post">
+                             <button class="btn btn-primary" type="submit">Generate idea</button>
+                         </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
