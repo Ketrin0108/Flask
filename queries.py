@@ -1,7 +1,8 @@
 from datetime import date
+from typing import List
 
-from sqlalchemy import func, Integer, update
-
+from sqlalchemy import func, Integer, update, outerjoin, Tuple
+from sqlalchemy import func
 from models import Idea, User
 
 
@@ -9,9 +10,11 @@ from models import Idea, User
 def get_all_idea():
     return Idea.query.all()
 
+
 # вычислить сколько у каждого пользователя идей
 def get_user_with_ideas():
-    return db.session.query(User).join(Idea).all()
+    return db.session.query(User, func.count(Idea.id)).outerjoin(Idea).group_by(User.id).all()
+
 
 # вычислить пользователя по Id
 def get_user_by_id():
@@ -42,7 +45,7 @@ def get_users_with_ideas_ending_with_k():
 
 # получить пользователя ,у которго имя заканчивается на 'а' не выходит результат!!
 def get_users_ending_with_a():
-    return User.query.join(Idea).filter(User.first_name.like("%a")).all()
+    return User.query.join(Idea).filter(User.first_name.like("%а")).all()
 
 # получить всех пользователей ,которые находится в списке "in" (Кира, Меган)
 def get_users_by_names():
@@ -52,7 +55,7 @@ def get_users_by_names():
 def select_users_with_gte_5_ideas():
     return db.session.query(User).outerjoin(User.ideas).group_by(User).having(func.count(Idea.id) >= 5).all()
 
-def func():
+def delete_idea_and_updatae_user():
     # Удалить все идеи, в которых есть слово "Learn"
     ideas_to_delete = Idea.query.filter(Idea.idea.ilike('%Learn%')).all()
     for idea in ideas_to_delete:
@@ -67,9 +70,12 @@ def func():
     db.session.commit()
 
 
+
+
+
 if __name__ == "__main__":
     from app import db, app
 
     with app.app_context():
-        result = func()
+        result = get_user_with_ideas()
         result
