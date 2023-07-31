@@ -11,7 +11,7 @@ from models import db, User, Idea
 from schemas import UserSchema
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://nxwpzgdi:1HAOdhJrFugfkU4tY2UDesWrq_UzKr2T@surus.db.elephantsql.com/nxwpzgdi'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 migrate = Migrate(app, db)
